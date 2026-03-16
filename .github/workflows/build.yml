@@ -19,19 +19,8 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         
-    - name: Download and setup Gradle
-      run: |
-        cd /tmp
-        curl -sL https://services.gradle.org/distributions/gradle-8.2-bin.zip -o gradle.zip
-        unzip -q gradle.zip
-        export PATH="/tmp/gradle-8.2/bin:$PATH"
-        gradle --version
-        
     - name: Build with Gradle
-      run: |
-        export PATH="/tmp/gradle-8.2/bin:$PATH"
-        cd ${{ github.workspace }}
-        gradle assembleDebug
+      run: gradle assembleDebug
         
     - name: Upload APK
       uses: actions/upload-artifact@v4
