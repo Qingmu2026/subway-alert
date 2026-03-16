@@ -335,7 +335,7 @@ class AudioMonitorService : Service() {
                 val client = okhttp3.OkHttpClient()
                 val request = okhttp3.Request.Builder()
                     .url(feishuWebhookUrl)
-                    .post(jsonBody.toRequestBody("application/json".toMediaType()))
+                    .post(jsonBody.toRequestBody())
                     .build()
                 
                 client.newCall(request).execute().use { response ->
@@ -347,9 +347,8 @@ class AudioMonitorService : Service() {
         }
     }
 
-    private fun String.toRequestBody(mediaType: okhttp3.MediaType?) = 
-        okhttp3.RequestBody.create(mediaType, this)
-    private fun String.toMediaType() = okhttp3.MediaType.parse(this)
+    private fun String.toRequestBody(): okhttp3.RequestBody = 
+        okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), this)
 
     /**
      * 触发振动提醒
