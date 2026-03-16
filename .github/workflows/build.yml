@@ -8,9 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v4
       
     - name: Set up JDK
@@ -18,15 +19,19 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: 'gradle'
         
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2.6.0
+    - name: Grant permission to gradlew
+      run: chmod +x gradlew
         
-    - name: Build APK
-      run: ./gradlew assembleDebug
+    - name: Build
+      run: ./gradlew assembleDebug --stacktrace
+      env:
+        GRADLE_OPTS: "-Dorg.gradle.daemon=false"
         
     - name: Upload APK
       uses: actions/upload-artifact@v4
+      if: success()
       with:
         name: app-debug.apk
         path: app/build/outputs/apk/debug/app-debug.apk
